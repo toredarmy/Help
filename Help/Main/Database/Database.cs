@@ -8,8 +8,6 @@ namespace Help.Main.Database
         public event Action<DateTime> LastEvent;
         public event Action<List<Alarm>> AlarmsEvent;
 
-        public bool IsInited { get; private set; }
-
         public void Init()
         {
             if (Settings.IsServiceRunning(Settings.ServerService))
@@ -21,7 +19,6 @@ namespace Help.Main.Database
                 {
                     if (CreateTable())
                     {
-                        IsInited = true;
                     }
                 }
             }

@@ -113,7 +113,7 @@ namespace Help.Main.Orion
                 where pLogData.TimeVal > @last and pLogData.Event in (216)
                 order by pLogData.TimeVal";
 
-            var alarms = new List<Alarm>();
+            var alarms = new List<Alarm>(0);
 
             try
             {

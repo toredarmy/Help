@@ -48,7 +48,6 @@ namespace Help.UI.ViewModel
 
                         orion.Start();
                         telegram.Start();
-
                         break;
                     case "Client":
                         // client
