@@ -74,6 +74,7 @@
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\SettingsIni.cs" />
     <Compile Include="Settings\SettingsLog.cs" />
+    <Compile Include="Settings\SettingsRegistry.cs" />
     <Compile Include="UI\Control\LogDataGrid.cs" />
     <Compile Include="UI\Model\BaseNotifyPropertyChanged.cs" />
     <Compile Include="UI\Model\LogItem.cs" />

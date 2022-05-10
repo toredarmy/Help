@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 using Help.UI.Model;
 
@@ -16,6 +17,11 @@ namespace Help
         private static void Log(string text)
         {
             Log(new LogItem($"Settings - {text}"));
+        }
+
+        private static void Except(Exception ex, [CallerMemberName] string method = null)
+        {
+            Log(new LogItem($"Settings - [ {ex.GetType().Name} in {method}() ]: {ex.Message}"));
         }
     }
 }

@@ -19,6 +19,7 @@ namespace Help.UI.ViewModel
                 Settings.Delete();
 #endif
                 Settings.Load();
+                Settings.LoadRegistry();
                 Settings.Save();
 
                 Title += $" - {Settings.Mode} mode";
