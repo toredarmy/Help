@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 
 using Help.Main.Database;
+using Help.Main.Orion;
+using Help.Main.Telegram;
 using Help.UI.Model;
 
 namespace Help.UI.ViewModel
@@ -27,6 +29,36 @@ namespace Help.UI.ViewModel
                 var database = new Database();
                 database.LogEvent += Log;
                 database.Init();
+
+                switch (Settings.Mode)
+                {
+                    case "Local":
+                        var orion = new Orion();
+                        orion.LogEvent += Log;
+                        orion.GetLastEvent += database.GetLast;
+                        orion.AlarmsEvent += database.SaveAlarms;
+
+                        var telegram = new Telegram();
+                        telegram.LogEvent += Log;
+
+                        database.LastEvent += orion.SetLast;
+                        database.AlarmsEvent += telegram.SendAlarms;
+
+                        orion.Start();
+                        telegram.Start();
+
+                        break;
+                    case "Client":
+                        // client
+                        // server
+                        // orion
+                        break;
+                    case "Server":
+                        // client
+                        // server
+                        // telegram
+                        break;
+                }
             });
         }
     }

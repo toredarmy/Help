@@ -1,7 +1,13 @@
-﻿namespace Help.Main.Database
+﻿using System;
+using System.Collections.Generic;
+
+namespace Help.Main.Database
 {
     internal sealed partial class Database : Base
     {
+        public event Action<DateTime> LastEvent;
+        public event Action<List<Alarm>> AlarmsEvent;
+
         public bool IsInited { get; private set; }
 
         public void Init()

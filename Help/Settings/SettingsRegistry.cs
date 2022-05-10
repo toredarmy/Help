@@ -6,7 +6,7 @@ namespace Help
 {
     internal partial class Settings
     {
-        internal static void LoadRegistry()
+        internal static bool LoadRegistry()
         {
             try
             {
@@ -24,14 +24,15 @@ namespace Help
                                 if (ObjectName.Length == 0)
                                 {
                                     ObjectName = database.IndexOf('_') >= 0 ? database.Split('_')[0] : database;
-                                    Log($"Change Settings.ObjectName to [ {Settings.ObjectName} ]");
+                                    Log($"Change ObjectName to [ {Settings.ObjectName} ]");
                                 }
                                 OrionServer = server;
                                 OrionDatabase = database;
 
-                                Log($"Change Settings.Server to [ {Settings.Server} ]");
-                                Log($"Change Settings.OrionServer to [ {Settings.OrionServer} ]");
-                                Log($"Change Settings.OrionDatabase to [ {Settings.OrionDatabase} ]");
+                                Log($"Change Server to [ {Settings.Server} ]");
+                                Log($"Change OrionServer to [ {Settings.OrionServer} ]");
+                                Log($"Change OrionDatabase to [ {Settings.OrionDatabase} ]");
+                                return true;
                             }
                         }
                     }
@@ -40,6 +41,7 @@ namespace Help
             {
                 Except(ex);
             }
+            return false;
         }
     }
 }
