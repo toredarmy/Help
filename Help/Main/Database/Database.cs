@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Help.Main.Database
+﻿namespace Help.Main.Database
 {
     internal sealed partial class Database : Base
     {
@@ -8,14 +6,17 @@ namespace Help.Main.Database
 
         public void Init()
         {
-#if DEBUG
-            Delete();
-#endif
-            if (CreateDatabase())
+            if (Settings.IsServiceRunning(Settings.ServerService))
             {
-                if (CreateTable())
+#if DEBUG
+                Delete();
+#endif
+                if (CreateDatabase())
                 {
-                    IsInited = true;
+                    if (CreateTable())
+                    {
+                        IsInited = true;
+                    }
                 }
             }
         }
