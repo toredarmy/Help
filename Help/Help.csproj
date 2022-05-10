@@ -68,6 +68,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Main\Base.cs" />
+    <Compile Include="Main\Database\Database.cs" />
+    <Compile Include="Main\Database\DatabaseCreate.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\SettingsIni.cs" />
     <Compile Include="Settings\SettingsLog.cs" />

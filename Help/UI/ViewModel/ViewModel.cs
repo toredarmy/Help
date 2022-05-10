@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 
+using Help.Main.Database;
 using Help.UI.Model;
 
 namespace Help.UI.ViewModel
@@ -21,6 +22,10 @@ namespace Help.UI.ViewModel
                 Settings.Save();
 
                 Title += $" - {Settings.Mode} mode";
+
+                var database = new Database();
+                database.LogEvent += Log;
+                database.Init();
             });
         }
     }

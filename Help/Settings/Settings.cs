@@ -26,6 +26,13 @@ namespace Help
         public static string TelegramToken { get; private set; }
         public static string TelegramChatId { get; private set; }
 
+        public static string ConnectionString =>
+            $"server={Server};database={Database};integrated security=true";
+        public static string ConnectionStringMaster =>
+            $"server={Server};database=master;integrated security=true";
+        public static string ConnectionStringOrion =>
+            $"server={OrionServer};uid={OrionUid};pwd={OrionPwd};database={OrionDatabase}";
+
         public static void Delete()
         {
             try
