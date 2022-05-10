@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace Help.UI.Control
 {
-    internal class LogDataGrid : DataGrid
+    internal sealed class LogDataGrid : DataGrid
     {
         public static readonly DependencyProperty AutoscrollProperty
             = DependencyProperty.Register("Autoscroll", typeof(bool), typeof(LogDataGrid), new UIPropertyMetadata(null));

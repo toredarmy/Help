@@ -22,20 +22,17 @@ namespace Help
 
             if (isOwned)
             {
-                var thread = new Thread(
-                    () =>
+                new Thread(() =>
+                {
+                    while (_eventWaitHandle.WaitOne())
                     {
-                        while (_eventWaitHandle.WaitOne())
-                        {
-                            Current.Dispatcher.BeginInvoke(
-                                (Action)(() => ((MainWindow)Current.MainWindow)?.BringToForeground()));
-                        }
-                    })
+                        Current.Dispatcher.BeginInvoke((Action)(() =>
+                            ((MainWindow)Current.MainWindow)?.BringToForeground()));
+                    }
+                })
                 {
                     IsBackground = true
-                };
-
-                thread.Start();
+                }.Start();
                 return;
             }
 

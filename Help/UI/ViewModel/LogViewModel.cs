@@ -7,7 +7,7 @@ using Help.UI.Model;
 
 namespace Help.UI.ViewModel
 {
-    internal partial class ViewModel
+    internal sealed partial class ViewModel
     {
         private bool _logAutoscroll = true;
         public bool LogAutoscroll { get => _logAutoscroll; set => Set(ref _logAutoscroll, value); }
@@ -21,6 +21,10 @@ namespace Help.UI.ViewModel
         {
             App.Current.Dispatcher.Invoke(() =>
             {
+                if (LogItems.Count == 500)
+                {
+                    LogItems.Clear();
+                }
                 LogItems.Add(item);
                 LogStatus = $"[ {LogItems.Count} ] {item.Text}";
             });
