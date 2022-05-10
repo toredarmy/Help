@@ -68,7 +68,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UI\Control\LogDataGrid.cs" />
     <Compile Include="UI\Model\BaseNotifyPropertyChanged.cs" />
+    <Compile Include="UI\Model\LogItem.cs" />
+    <Compile Include="UI\ViewModel\LogViewModel.cs" />
     <Compile Include="UI\ViewModel\ViewModel.cs" />
     <Compile Include="UI\View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
