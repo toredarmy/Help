@@ -68,6 +68,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Settings\Settings.cs" />
+    <Compile Include="Settings\SettingsIni.cs" />
+    <Compile Include="Settings\SettingsLog.cs" />
     <Compile Include="UI\Control\LogDataGrid.cs" />
     <Compile Include="UI\Model\BaseNotifyPropertyChanged.cs" />
     <Compile Include="UI\Model\LogItem.cs" />

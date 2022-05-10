@@ -1,4 +1,6 @@
-﻿using Help.UI.Model;
+﻿using System.Threading.Tasks;
+
+using Help.UI.Model;
 
 namespace Help.UI.ViewModel
 {
@@ -9,6 +11,17 @@ namespace Help.UI.ViewModel
 
         public ViewModel()
         {
+            Task.Run(() =>
+            {
+                Settings.LogEvent += Log;
+#if DEBUG
+                Settings.Delete();
+#endif
+                Settings.Load();
+                Settings.Save();
+
+                Title += $" - {Settings.Mode} mode";
+            });
         }
     }
 }
