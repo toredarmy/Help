@@ -40,9 +40,11 @@ namespace Help.UI.ViewModel
 
                         var telegram = new Telegram();
                         telegram.LogEvent += Log;
+                        telegram.AlarmEvent += database.UpdateAlarm;
 
                         database.LastEvent += orion.SetLast;
                         database.AlarmsEvent += telegram.SendAlarms;
+                        database.GetNotSend();
 
                         orion.Start();
                         telegram.Start();

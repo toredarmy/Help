@@ -8,7 +8,7 @@ namespace Help.Main.Database
         {
         }
 
-        public void UpdateAlarms(List<Alarm> alarms)
+        public void UpdateAlarm(Alarm alarm)
         {
         }
     }
