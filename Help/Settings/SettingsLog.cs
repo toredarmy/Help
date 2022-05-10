@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Windows.Media;
 
 using Help.UI.Model;
 
@@ -21,7 +22,7 @@ namespace Help
 
         private static void Except(Exception ex, [CallerMemberName] string method = null)
         {
-            Log(new LogItem($"Settings - [ {ex.GetType().Name} in {method}() ]: {ex.Message}"));
+            Log(new LogItem($"Settings - [ {ex.GetType().Name} in {method}() ]: {ex.Message}", Brushes.IndianRed));
         }
     }
 }

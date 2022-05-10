@@ -28,7 +28,12 @@ namespace Help.UI.ViewModel
 
                 var database = new Database();
                 database.LogEvent += Log;
-                database.Init();
+                if (!database.Init())
+                {
+                    Except("Database initialization FAIL");
+                    Except("Program has been stopped");
+                    return;
+                }
 
                 switch (Settings.Mode)
                 {

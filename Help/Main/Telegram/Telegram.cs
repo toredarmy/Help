@@ -60,6 +60,10 @@ namespace Help.Main.Telegram
 
         public void SendAlarms(List<Alarm> alarms)
         {
+            if (!run)
+            {
+                return;
+            }
             foreach (var alarm in alarms)
             {
                 queue.Enqueue(alarm);
