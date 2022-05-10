@@ -1,9 +1,11 @@
-﻿namespace Help.UI.ViewModel
+﻿using Help.UI.Model;
+
+namespace Help.UI.ViewModel
 {
-    internal class ViewModel
+    internal class ViewModel : BaseNotifyPropertyChanged
     {
         private string _title = "Help";
-        public string Title { get => _title; set => _title = value; }
+        public string Title { get => _title; set => Set(ref _title, value); }
 
         public ViewModel()
         {
