@@ -72,12 +72,15 @@
     </Compile>
     <Compile Include="Main\Alarm.cs" />
     <Compile Include="Main\Base.cs" />
+    <Compile Include="Main\Client\Client.cs" />
     <Compile Include="Main\Database\Database.cs" />
     <Compile Include="Main\Database\DatabaseCreate.cs" />
     <Compile Include="Main\Database\DatabaseLoad.cs" />
     <Compile Include="Main\Database\DatabaseSave.cs" />
     <Compile Include="Main\Extension\SqlDataReaderExtension.cs" />
+    <Compile Include="Main\Msg.cs" />
     <Compile Include="Main\Orion\Orion.cs" />
+    <Compile Include="Main\Server\Server.cs" />
     <Compile Include="Main\Telegram\Telegram.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\SettingsIni.cs" />

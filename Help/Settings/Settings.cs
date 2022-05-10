@@ -5,11 +5,15 @@ namespace Help
 {
     internal partial class Settings
     {
+        public const string LOCAL = "Local";
+        public const string CLIENT = "Client";
+        public const string SERVER = "Server";
+
         public static string Exe { get; } = Assembly.GetExecutingAssembly().Location;
         public static string Path { get; } = System.IO.Path.GetDirectoryName(Exe);
         public static string IniFilename { get; } = $"{Path}\\Help.ini";
 
-        public static string Mode { get; private set; } = "Local";
+        public static string Mode { get; private set; } = SERVER;
         public static string Server { get; private set; } = ".\\SQLSERVER2008";
         public static string Database { get; private set; } = "HelpDatabase_v1";
         public static string ObjectName { get; private set; }
@@ -49,6 +53,11 @@ namespace Help
         public static void Load()
         {
             Mode = IniReadValue("Global", "Mode", Mode);
+            if (Mode != LOCAL & Mode != CLIENT & Mode != SERVER)
+            {
+                Except($"Undefined Mode [ {Mode} ] change to [ { LOCAL } ]");
+                Mode = LOCAL;
+            }
             Server = IniReadValue("Global", "Server", Server);
             Database = IniReadValue("Global", "Database", Database);
             ObjectName = IniReadValue("Global", "ObjectName", ObjectName);

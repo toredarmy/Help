@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Security.Claims;
 
 namespace Help.Main.Database
 {
@@ -90,17 +91,41 @@ namespace Help.Main.Database
             return 0;
         }
 
+        public void UpdateAlarms(List<Alarm> alarms)
+        {
+            try
+            {
+                var ids = "";
+                foreach (var alarm in alarms)
+                {
+                    ids += ids.Length > 0 ? $",{alarm.Id}" : $"{alarm.Id}";
+                }
+                const string query = "update Alarms set Send=1 where Id in (@Ids)";
+                using (var connection = new SqlConnection(Settings.ConnectionString))
+                using (var command = new SqlCommand(query, connection))
+                {
+                    connection.Open();
+                    command.Parameters.AddWithValue("@Ids", ids);
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                Except(ex);
+            }
+        }
+
+
         public void UpdateAlarm(Alarm alarm)
         {
             try
             {
-                const string query = "update Alarms set Send=@Send where Id=@Id";
+                const string query = "update Alarms set Send=1 where Id=@Id";
                 using (var connection = new SqlConnection(Settings.ConnectionString))
                 using (var command = new SqlCommand(query, connection))
                 {
                     connection.Open();
                     command.Parameters.AddWithValue("@Id", alarm.Id);
-                    command.Parameters.AddWithValue("@Send", alarm.Send);
                     command.ExecuteNonQuery();
                 }
             }

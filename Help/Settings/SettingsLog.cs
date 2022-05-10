@@ -20,9 +20,14 @@ namespace Help
             Log(new LogItem($"Settings - {text}"));
         }
 
+        private static void Except(string text)
+        {
+            Log(new LogItem($"Settings - {text}", Brushes.IndianRed));
+        }
+
         private static void Except(Exception ex, [CallerMemberName] string method = null)
         {
-            Log(new LogItem($"Settings - [ {ex.GetType().Name} in {method}() ]: {ex.Message}", Brushes.IndianRed));
+            Except($"[ {ex.GetType().Name} in {method}() ]: {ex.Message}");
         }
     }
 }

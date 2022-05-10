@@ -34,7 +34,6 @@ namespace Help.Main.Telegram
                 {
                     if (queue.Count > 0)
                     {
-                        Log($"Start sending [ {queue.Count} ] alarms");
                         var client = new HttpClient();
                         var serializer = new JavaScriptSerializer();
                         while (queue.Count > 0)
@@ -84,7 +83,7 @@ namespace Help.Main.Telegram
                 catch (Exception ex)
                 {
                     Except(ex);
-                    Log("Internet? connection error");
+                    Except("Internet? connection error");
                     return false;
                 }
 
@@ -97,7 +96,7 @@ namespace Help.Main.Telegram
                 catch (Exception ex)
                 {
                     Except(ex);
-                    Log("Not correct json");
+                    Except("Not correct json");
                     return false;
                 }
 
@@ -106,11 +105,10 @@ namespace Help.Main.Telegram
                     if ((bool)json["ok"])
                     {
                         Log($"[ {response.StatusCode} ] Alarm#{alarm.Id} [ {alarm.Guid} ] - sent");
-                        alarm.Send = 1;
                         AlarmEvent?.Invoke(alarm);
                         return true;
                     }
-                    Log("OOPS something wrong");
+                    Except("OOPS something wrong");
                 }
                 else
                 {
@@ -120,30 +118,30 @@ namespace Help.Main.Telegram
                         case 429:
                             var parameters = (IDictionary<string, object>)json["parameters"];
                             var retryAfter = (int)parameters["retry_after"];
-                            Log($"[ {errorCode} ] Many Requests detected, sleeping [ {retryAfter} ] sec");
+                            Except($"[ {errorCode} ] Many Requests detected, sleeping [ {retryAfter} ] sec");
                             Task.Run(() => Task.Delay(1000 * retryAfter)).Wait();
                             break;
                         case 400 when (string)json["description"] == "Bad Request: chat not found":
-                            Log($"[ {errorCode} ] Chat [ {Settings.TelegramChatId} ] not found");
+                            Except($"[ {errorCode} ] Chat [ {Settings.TelegramChatId} ] not found");
                             run = false;
                             break;
                         case 400 when (string)json["description"] == "Bad Request: chat_id is empty":
-                            Log($"[ {errorCode} ] Chat [ {Settings.TelegramChatId} ] is empty");
+                            Except($"[ {errorCode} ] Chat [ {Settings.TelegramChatId} ] is empty");
                             run = false;
                             break;
                         case 400:
-                            Log($"[ {errorCode} ] UNKNOWN [ {jsonString} ]");
+                            Except($"[ {errorCode} ] UNKNOWN [ {jsonString} ]");
                             run = false;
                             break;
                         case 401:
                             if ((string)json["description"] == "Unauthorized")
                             {
-                                Log($"[ {errorCode} ] Unauthorized with token [ {Settings.TelegramToken} ]");
+                                Except($"[ {errorCode} ] Unauthorized with token [ {Settings.TelegramToken} ]");
                                 run = false;
                             }
                             break;
                         default:
-                            Log($"[ {errorCode} ] UNKNOWN [ {jsonString} ]");
+                            Except($"[ {errorCode} ] UNKNOWN [ {jsonString} ]");
                             run = false;
                             break;
                     }

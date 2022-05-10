@@ -1,7 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
+using Help.Main;
+using Help.Main.Client;
 using Help.Main.Database;
 using Help.Main.Orion;
+using Help.Main.Server;
 using Help.Main.Telegram;
 using Help.UI.Model;
 
@@ -11,6 +15,9 @@ namespace Help.UI.ViewModel
     {
         private string _title = "Help";
         public string Title { get => _title; set => Set(ref _title, value); }
+
+        private Database database;
+        private Telegram telegram;
 
         public ViewModel()
         {
@@ -26,7 +33,7 @@ namespace Help.UI.ViewModel
 
                 Title += $" - {Settings.Mode} mode";
 
-                var database = new Database();
+                database = new Database();
                 database.LogEvent += Log;
                 if (!database.Init())
                 {
@@ -37,35 +44,113 @@ namespace Help.UI.ViewModel
 
                 switch (Settings.Mode)
                 {
-                    case "Local":
-                        var orion = new Orion();
-                        orion.LogEvent += Log;
-                        orion.GetLastEvent += database.GetLast;
-                        orion.AlarmsEvent += database.SaveAlarms;
-
-                        var telegram = new Telegram();
-                        telegram.LogEvent += Log;
-                        telegram.AlarmEvent += database.UpdateAlarm;
-
-                        database.LastEvent += orion.SetLast;
-                        database.AlarmsEvent += telegram.SendAlarms;
-                        database.GetNotSend();
-
-                        orion.Start();
-                        telegram.Start();
+                    case Settings.LOCAL:
+                        LocalMode();
                         break;
-                    case "Client":
-                        // client
-                        // server
-                        // orion
+                    case Settings.CLIENT:
+                        ClientMode();
                         break;
-                    case "Server":
-                        // client
-                        // server
-                        // telegram
+                    case Settings.SERVER:
+                        ServerMode();
                         break;
                 }
             });
+        }
+
+        private void LocalMode()
+        {
+            var orion = new Orion();
+            orion.LogEvent += Log;
+            orion.GetLastEvent += database.GetLast;
+            orion.AlarmsEvent += database.SaveAlarms;
+
+            telegram = new Telegram();
+            telegram.LogEvent += Log;
+            telegram.AlarmEvent += database.UpdateAlarm;
+
+            database.LastEvent += orion.SetLast;
+            database.AlarmsEvent += telegram.SendAlarms;
+            database.GetNotSend();
+
+            orion.Start();
+            telegram.Start();
+        }
+
+        private void ClientMode()
+        {
+            var client = new Client();
+            client.LogEvent += Log;
+            client.MsgEvent += Client_MsgEvent;
+
+            var server = new Server();
+            server.LogEvent += Log;
+            server.MsgEvent += Server_MsgEvent;
+
+            var orion = new Orion();
+            orion.LogEvent += Log;
+            orion.GetLastEvent += database.GetLast;
+            orion.AlarmsEvent += database.SaveAlarms;
+
+            database.LastEvent += orion.SetLast;
+            database.AlarmsEvent += client.SendAlarms;
+            database.GetNotSend();
+
+            client.Start();
+            server.Start();
+            orion.Start();
+        }
+
+        private void ServerMode()
+        {
+            var client = new Client();
+            client.LogEvent += Log;
+            client.MsgEvent += Client_MsgEvent;
+
+            var server = new Server();
+            server.LogEvent += Log;
+            server.MsgEvent += Server_MsgEvent;
+
+            telegram = new Telegram();
+            telegram.LogEvent += Log;
+            telegram.AlarmEvent += database.UpdateAlarm;
+
+            database.AlarmsEvent += telegram.SendAlarms;
+            database.GetNotSend();
+
+            client.Start();
+            server.Start();
+            telegram.Start();
+        }
+
+        private void Client_MsgEvent(Msg msg)
+        {
+            // message sent
+            if (Settings.Mode == Settings.CLIENT)
+            {
+                if (msg.DataType == "Alarms")
+                {
+                    database.UpdateAlarms((List<Alarm>)msg.Data);
+                }
+            }
+        }
+
+        private void Server_MsgEvent(Msg msg)
+        {
+            // incoming message
+            if (Settings.Mode == Settings.CLIENT)
+            {
+                if (msg.DataType == "UpdateFile")
+                {
+                    // update programm
+                }
+            }
+            else if (Settings.Mode == Settings.SERVER)
+            {
+                if (msg.DataType == "Alarms")
+                {
+                    telegram.SendAlarms((List<Alarm>)msg.Data);
+                }
+            }
         }
     }
 }

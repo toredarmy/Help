@@ -6,7 +6,7 @@ using Help.Main.Extension;
 namespace Help.Main
 {
     [Serializable]
-    internal sealed class Alarm
+    internal struct Alarm
     {
         public int Id { get; set; }
         public Guid Guid { get; }
@@ -46,6 +46,7 @@ namespace Help.Main
         /// <param name="obj">Имя обьекта</param>
         public Alarm(SqlDataReader reader, string src, string obj)
         {
+            Id = -1;
             Guid = reader.GetValue<Guid>("GUID");
             Time = reader.GetValue<DateTime>("Time");
             Database = src;
@@ -55,6 +56,7 @@ namespace Help.Main
             Section = reader.GetValue<int>("Section");
             SectionName = reader.GetValue<string>("SectionName");
             Event = reader.GetValue<string>("Event");
+            Send = 0;
         }
     }
 }
