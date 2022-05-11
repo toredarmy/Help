@@ -10,7 +10,6 @@ namespace Help.Main.Telegram
     {
         public event Action<Alarm> AlarmEvent;
 
-        private bool run = true;
         private readonly Queue<Alarm> queue = new Queue<Alarm>();
 
         public void Start()
@@ -41,16 +40,23 @@ namespace Help.Main.Telegram
                             var alarm = queue.Peek();
                             if (SendAlarm(client, serializer, alarm))
                             {
+                                delay = 100;
                                 queue.Dequeue();
-                                await Task.Delay(3000);
+                                await Task.Delay(3000); // telegram limit: 20 message/min
                             }
                             else
                             {
+                                delay += 500;
                                 break;
                             }
                         }
                     }
-                    await Task.Delay(1000);
+
+                    await Task.Delay(delay);
+                    if (delay > 10000)
+                    {
+                        delay = 100;
+                    }
                 }
 
                 Except("Stopped");
@@ -63,6 +69,7 @@ namespace Help.Main.Telegram
             {
                 return;
             }
+            delay = 100;
             foreach (var alarm in alarms)
             {
                 queue.Enqueue(alarm);
@@ -82,8 +89,8 @@ namespace Help.Main.Telegram
                 }
                 catch (Exception ex)
                 {
+                    // Internet? connection error
                     Except(ex);
-                    Except("Internet? connection error");
                     return false;
                 }
 
@@ -95,8 +102,8 @@ namespace Help.Main.Telegram
                 }
                 catch (Exception ex)
                 {
+                    // Not correct json
                     Except(ex);
-                    Except("Not correct json");
                     return false;
                 }
 

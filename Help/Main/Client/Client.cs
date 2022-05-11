@@ -11,7 +11,6 @@ namespace Help.Main.Client
     {
         public event Action<Msg> MsgEvent;
 
-        private bool run = true;
         private readonly Queue<Msg> queue = new Queue<Msg>();
 
         public void Start()
@@ -36,15 +35,22 @@ namespace Help.Main.Client
                         var msg = queue.Peek();
                         if (SendMsg(msg))
                         {
+                            delay = 100;
                             queue.Dequeue();
                             MsgEvent?.Invoke(msg);
                         }
                         else
                         {
+                            delay += 500;
                             break;
                         }
                     }
-                    await Task.Delay(1000);
+
+                    await Task.Delay(delay);
+                    if (delay > 10000)
+                    {
+                        delay = 100;
+                    }
                 }
 
                 Except("Stopped");
@@ -57,6 +63,7 @@ namespace Help.Main.Client
             {
                 return;
             }
+            delay = 100;
             queue.Enqueue(new Msg
             {
                 To = Settings.ServerIp,
@@ -72,14 +79,19 @@ namespace Help.Main.Client
             {
                 using (var client = new TcpClient())
                 {
-                    if (client.ConnectAsync(msg.To, Settings.Port).Wait(1000))
+                    var timeout = delay;
+                    if (timeout < 1000)
+                    {
+                        timeout = 1000;
+                    }
+                    if (client.ConnectAsync(msg.To, Settings.Port).Wait(timeout))
                     {
                         using (var stream = client.GetStream())
                             new BinaryFormatter().Serialize(stream, msg);
-                        Log($"Message [ {msg.DataType} ] has been sent");
+                        Log($"[ {msg.DataType} ] sent to [ {msg.To} ]");
                         return true;
                     }
-                    Except($"Connection to [ {msg.To}:{Settings.Port} ] FAIL");
+                    Except($"Connection to [ {msg.To}:{Settings.Port}, {delay} ] FAIL");
                 }
             }
             catch (Exception ex)

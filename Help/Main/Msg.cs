@@ -3,7 +3,7 @@
 namespace Help.Main
 {
     [Serializable]
-    internal struct Msg
+    internal sealed class Msg
     {
         public string To { get; set; }
         public string From { get; set; }

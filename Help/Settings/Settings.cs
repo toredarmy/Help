@@ -13,7 +13,7 @@ namespace Help
         public static string Path { get; } = System.IO.Path.GetDirectoryName(Exe);
         public static string IniFilename { get; } = $"{Path}\\Help.ini";
 
-        public static string Mode { get; private set; } = SERVER;
+        public static string Mode { get; private set; } = CLIENT;
         public static string Server { get; private set; } = ".\\SQLSERVER2008";
         public static string Database { get; private set; } = "HelpDatabase_v1";
         public static string ObjectName { get; private set; }
@@ -23,8 +23,8 @@ namespace Help
         public static string OrionPwd { get; private set; } = "123456";
         public static string OrionDatabase { get; private set; }
 
-        public static string ClientIp { get; private set; }
-        public static string ServerIp { get; private set; }
+        public static string ClientIp { get; private set; } = "192.168.56.1";
+        public static string ServerIp { get; private set; } = "192.168.56.101";
         public static int Port { get; private set; } = 23432;
 
         public static string TelegramToken { get; private set; }

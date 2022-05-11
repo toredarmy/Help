@@ -10,6 +10,9 @@ namespace Help.Main
     {
         public event Action<LogItem> LogEvent;
 
+        protected int delay = 100;
+        protected bool run = true;
+
         private void Log(LogItem item)
         {
             LogEvent?.Invoke(item);

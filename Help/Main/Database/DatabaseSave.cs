@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Security.Claims;
 
 namespace Help.Main.Database
 {
@@ -11,25 +10,25 @@ namespace Help.Main.Database
         {
             try
             {
+                const string query = @"
+                    insert into Alarms (
+                    GUID, Time, Src,
+                    Obj, Address, AddressName,
+                    Section, SectionName, Event) 
+                    output inserted.id
+                    values (
+                    @GUID, @Time, @Src, @Obj,
+                    @Address, @AddressName, @Section,
+                    @SectionName, @Event)";
                 using (var connection = new SqlConnection(Settings.ConnectionString))
-                using (var command = new SqlCommand())
+                using (var command = new SqlCommand(query, connection))
                 {
                     var saved = 0;
                     var exists = 0;
                     var savedAlarms = new List<Alarm>(0);
 
                     connection.Open();
-                    command.Connection = connection;
-                    command.CommandText = @"
-                        insert into Alarms (
-                        GUID, Time, Src,
-                        Obj, Address, AddressName,
-                        Section, SectionName, Event) 
-                        output inserted.id
-                        values (
-                        @GUID, @Time, @Src, @Obj,
-                        @Address, @AddressName, @Section,
-                        @SectionName, @Event)";
+
                     foreach (var alarm in alarms)
                     {
                         var result = SaveAlarm(command, alarm);
@@ -44,8 +43,11 @@ namespace Help.Main.Database
                                 break;
                         }
                     }
+
                     if (exists > 0)
+                    {
                         Log($"Saved [ {saved} ], exists [ {exists} ] alarms");
+                    }
                     else if (saved > 0)
                     {
                         Log($"Saved [ {saved} ] alarms");
@@ -95,17 +97,12 @@ namespace Help.Main.Database
         {
             try
             {
-                var ids = "";
-                foreach (var alarm in alarms)
-                {
-                    ids += ids.Length > 0 ? $",{alarm.Id}" : $"{alarm.Id}";
-                }
-                const string query = "update Alarms set Send=1 where Id in (@Ids)";
+                var ids = alarms.ConvertAll(alarm => alarm.Id).ToArray();
+                var query = $"update Alarms set Send=1 where Id in ({string.Join(",", ids)})";
                 using (var connection = new SqlConnection(Settings.ConnectionString))
                 using (var command = new SqlCommand(query, connection))
                 {
                     connection.Open();
-                    command.Parameters.AddWithValue("@Ids", ids);
                     command.ExecuteNonQuery();
                 }
             }
@@ -120,12 +117,11 @@ namespace Help.Main.Database
         {
             try
             {
-                const string query = "update Alarms set Send=1 where Id=@Id";
+                var query = $"update Alarms set Send=1 where Id={alarm.Id}";
                 using (var connection = new SqlConnection(Settings.ConnectionString))
                 using (var command = new SqlCommand(query, connection))
                 {
                     connection.Open();
-                    command.Parameters.AddWithValue("@Id", alarm.Id);
                     command.ExecuteNonQuery();
                 }
             }

@@ -10,8 +10,6 @@ namespace Help.Main.Server
     {
         public event Action<Msg> MsgEvent;
 
-        private bool run = true;
-
         public void Start()
         {
             Task.Run(() =>
@@ -73,8 +71,8 @@ namespace Help.Main.Server
                     var data = new BinaryFormatter().Deserialize(stream);
                     if (data is Msg msg)
                     {
-                        Log($"Incoming message [ {msg.DataType} ]");
                         msg.From = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
+                        Log($"[ {msg.DataType} ] incoming from [ {msg.From} ]");
                         MsgEvent?.Invoke(msg);
                     }
                 }

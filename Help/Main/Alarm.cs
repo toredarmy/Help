@@ -6,7 +6,7 @@ using Help.Main.Extension;
 namespace Help.Main
 {
     [Serializable]
-    internal struct Alarm
+    internal sealed class Alarm
     {
         public int Id { get; set; }
         public Guid Guid { get; }
