@@ -33,6 +33,7 @@ namespace Help.Main.Updater
             try
             {
                 File.WriteAllBytes(tmpFilename, bytes);
+                Log("Save data to [ Help.tmp ] file");
                 return true;
             }
             catch (Exception ex)
@@ -56,6 +57,7 @@ namespace Help.Main.Updater
             try
             {
                 File.WriteAllText(batFilename, contents);
+                Log("Create [ update.bat ]");
                 return true;
             }
             catch (Exception ex)
@@ -72,6 +74,7 @@ namespace Help.Main.Updater
             process.StartInfo.FileName = batFilename;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.Start();
+            Log("Run [ update.bat ]");
         }
     }
 }

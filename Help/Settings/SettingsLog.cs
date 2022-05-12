@@ -6,7 +6,7 @@ using Help.UI.Model;
 
 namespace Help
 {
-    internal partial class Settings
+    internal static partial class Settings
     {
         public static event Action<LogItem> LogEvent;
 

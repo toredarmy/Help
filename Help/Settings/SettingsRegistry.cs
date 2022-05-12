@@ -4,7 +4,7 @@ using Microsoft.Win32;
 
 namespace Help
 {
-    internal partial class Settings
+    internal static partial class Settings
     {
         internal static bool LoadRegistry()
         {

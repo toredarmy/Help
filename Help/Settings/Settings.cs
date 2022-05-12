@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Help
 {
-    internal partial class Settings
+    internal static partial class Settings
     {
         public const string LOCAL = "Local";
         public const string CLIENT = "Client";
@@ -73,6 +73,11 @@ namespace Help
 
             TelegramToken = IniReadValue("Telegram", "Token", TelegramToken);
             TelegramChatId = IniReadValue("Telegram", "ChatId", TelegramChatId);
+
+            if (Mode != SERVER)
+            {
+                LoadRegistry();
+            }
 
             Log($"[ {IniFilename} ] load");
         }

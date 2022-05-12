@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Interop;
 
 using Help.Main;
 using Help.Main.Client;
@@ -19,7 +18,6 @@ namespace Help.UI.ViewModel
         public string Title { get => _title; set => Set(ref _title, value); }
 
         private Database database;
-        private Telegram telegram;
 
         public ViewModel()
         {
@@ -30,7 +28,6 @@ namespace Help.UI.ViewModel
                 Settings.Delete();
 #endif
                 Settings.Load();
-                Settings.LoadRegistry();
                 Settings.Save();
 
                 Title += $" - {Settings.Mode} mode";
@@ -66,7 +63,7 @@ namespace Help.UI.ViewModel
             orion.GetLastEvent += database.GetLast;
             orion.AlarmsEvent += database.SaveAlarms;
 
-            telegram = new Telegram();
+            var telegram = new Telegram();
             telegram.LogEvent += Log;
             telegram.AlarmEvent += database.UpdateAlarm;
 
@@ -112,7 +109,7 @@ namespace Help.UI.ViewModel
             server.LogEvent += Log;
             server.MsgEvent += Server_MsgEvent;
 
-            telegram = new Telegram();
+            var telegram = new Telegram();
             telegram.LogEvent += Log;
             telegram.AlarmEvent += database.UpdateAlarm;
 
@@ -139,26 +136,32 @@ namespace Help.UI.ViewModel
         private void Server_MsgEvent(Msg msg)
         {
             // incoming message
-            if (Settings.Mode == Settings.CLIENT)
+            switch (Settings.Mode)
             {
-                if (msg.DataType == "UpdateFile")
-                {
-                    var updater = new Updater();
-                    updater.Update((byte[])msg.Data);
-                    // update programm
-                    // save data to temp file
-                    // run update.bat
-                    //    if not busy: saves alarms ... etc
-                    //    if ...
-                    // close app
-                }
-            }
-            else if (Settings.Mode == Settings.SERVER)
-            {
-                if (msg.DataType == "Alarms")
-                {
-                    telegram.SendAlarms((List<Alarm>)msg.Data);
-                }
+                case Settings.CLIENT:
+                    switch (msg.DataType)
+                    {
+                        case "UpdateFile":
+                            var updater = new Updater();
+                            updater.LogEvent += Log;
+                            updater.Update((byte[])msg.Data);
+                            break;
+                        case "Stop":
+                            App.Current.Dispatcher.Invoke(() =>
+                            {
+                                App.Current.Shutdown();
+                            });
+                            break;
+                    }
+                    break;
+                case Settings.SERVER:
+                    switch (msg.DataType)
+                    {
+                        case "Alarms":
+                            database.SaveAlarms((List<Alarm>)msg.Data);
+                            break;
+                    }
+                    break;
             }
         }
     }

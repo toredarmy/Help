@@ -73,6 +73,17 @@ namespace Help.Main.Client
             Log("Added [ Message with Alarms ] to queue");
         }
 
+        public void Send(Msg msg)
+        {
+            if (!run)
+            {
+                return;
+            }
+            delay = 100;
+            queue.Enqueue(msg);
+            Log($"Added [ Message \"{msg.DataType}\" ] to queue");
+        }
+
         private bool SendMsg(Msg msg)
         {
             try
@@ -84,6 +95,7 @@ namespace Help.Main.Client
                     {
                         timeout = 1000;
                     }
+
                     if (client.ConnectAsync(msg.To, Settings.Port).Wait(timeout))
                     {
                         using (var stream = client.GetStream())

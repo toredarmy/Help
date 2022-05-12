@@ -26,8 +26,10 @@ namespace Help
                 {
                     while (_eventWaitHandle.WaitOne())
                     {
-                        Current.Dispatcher.BeginInvoke((Action)(() =>
-                            ((MainWindow)Current.MainWindow)?.BringToForeground()));
+                        Current.Dispatcher.Invoke(() =>
+                        {
+                            ((MainWindow)Current.MainWindow)?.BringToForeground();
+                        });
                     }
                 })
                 {

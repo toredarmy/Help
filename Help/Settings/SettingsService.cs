@@ -3,7 +3,7 @@ using System.ServiceProcess;
 
 namespace Help
 {
-    internal partial class Settings
+    internal static partial class Settings
     {
         public static string ServerService =>
             Server.IndexOf('\\') >= 0 ? $"MSSQL${Server.Split('\\')[1]}" : $"MSSQL${Server}";

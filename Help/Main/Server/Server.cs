@@ -44,7 +44,7 @@ namespace Help.Main.Server
                     {
                         client = listener.AcceptTcpClient();
                     }
-                    catch (SocketException ex)
+                    catch (SocketException ex) // ???
                     {
                         if (ex.SocketErrorCode == SocketError.Interrupted)
                         {

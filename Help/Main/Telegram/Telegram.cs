@@ -11,6 +11,7 @@ namespace Help.Main.Telegram
         public event Action<Alarm> AlarmEvent;
 
         private readonly Queue<Alarm> queue = new Queue<Alarm>();
+        private static readonly HttpClient client = new HttpClient();
 
         public void Start()
         {
@@ -33,12 +34,11 @@ namespace Help.Main.Telegram
                 {
                     if (queue.Count > 0)
                     {
-                        var client = new HttpClient();
                         var serializer = new JavaScriptSerializer();
                         while (queue.Count > 0)
                         {
                             var alarm = queue.Peek();
-                            if (SendAlarm(client, serializer, alarm))
+                            if (SendAlarm(serializer, alarm))
                             {
                                 delay = 100;
                                 queue.Dequeue();
@@ -77,7 +77,7 @@ namespace Help.Main.Telegram
             Log($"Added [ {alarms.Count} ] alarms to queue");
         }
 
-        private bool SendAlarm(HttpClient client, JavaScriptSerializer serializer, Alarm alarm)
+        private bool SendAlarm(JavaScriptSerializer serializer, Alarm alarm)
         {
             try
             {
