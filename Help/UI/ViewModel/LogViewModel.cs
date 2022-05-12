@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
 
@@ -27,6 +28,8 @@ namespace Help.UI.ViewModel
                 }
                 LogItems.Add(item);
                 LogStatus = $"[ {LogItems.Count} ] {item.Text}";
+
+                File.AppendAllText($"{Settings.Path}\\Help.log", $"{item.Time:dd-MM-yyyy HH:mm:ss:fff} - {item.Text}{Environment.NewLine}");
             });
         }
 
