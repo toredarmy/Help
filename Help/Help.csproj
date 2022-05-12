@@ -82,6 +82,7 @@
     <Compile Include="Main\Orion\Orion.cs" />
     <Compile Include="Main\Server\Server.cs" />
     <Compile Include="Main\Telegram\Telegram.cs" />
+    <Compile Include="Main\Updater\Updater.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\SettingsIni.cs" />
     <Compile Include="Settings\SettingsLog.cs" />
@@ -104,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Main\Updater\update.bat" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Help.ico" />

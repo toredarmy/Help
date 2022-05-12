@@ -87,7 +87,9 @@ namespace Help.Main.Client
                     if (client.ConnectAsync(msg.To, Settings.Port).Wait(timeout))
                     {
                         using (var stream = client.GetStream())
+                        {
                             new BinaryFormatter().Serialize(stream, msg);
+                        }
                         Log($"[ {msg.DataType} ] sent to [ {msg.To} ]");
                         return true;
                     }

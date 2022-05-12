@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Interop;
 
 using Help.Main;
 using Help.Main.Client;
@@ -7,6 +8,7 @@ using Help.Main.Database;
 using Help.Main.Orion;
 using Help.Main.Server;
 using Help.Main.Telegram;
+using Help.Main.Updater;
 using Help.UI.Model;
 
 namespace Help.UI.ViewModel
@@ -141,7 +143,14 @@ namespace Help.UI.ViewModel
             {
                 if (msg.DataType == "UpdateFile")
                 {
+                    var updater = new Updater();
+                    updater.Update((byte[])msg.Data);
                     // update programm
+                    // save data to temp file
+                    // run update.bat
+                    //    if not busy: saves alarms ... etc
+                    //    if ...
+                    // close app
                 }
             }
             else if (Settings.Mode == Settings.SERVER)
